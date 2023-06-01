@@ -1,5 +1,7 @@
 package com.example.seccion7_realm.Models;
 
+import com.example.seccion7_realm.App.MyApplication;
+
 import java.util.Date;
 
 import io.realm.RealmObject;
@@ -18,7 +20,7 @@ public class Note extends RealmObject {
   }
 
   public Note(String descripcion){
-    this.id = 0;
+    this.id = MyApplication.NoteID.incrementAndGet();
     this.descripcion = descripcion;
     this.createdAt = new Date();
   }
