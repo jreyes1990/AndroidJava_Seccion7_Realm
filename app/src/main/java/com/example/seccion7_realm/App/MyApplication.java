@@ -8,6 +8,7 @@ import com.example.seccion7_realm.Models.Note;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
 
@@ -19,10 +20,18 @@ public class MyApplication extends Application {
   public void onCreate() {
     super.onCreate();
 
+    setUpRealmConfig();
+
     Realm realm = Realm.getDefaultInstance();
     BoardID = getIdByTable(realm, Board.class);
     NoteID = getIdByTable(realm, Note.class);
     realm.close();
+  }
+
+  // Configuracion de base de datos en Realm
+  private void setUpRealmConfig(){
+    RealmConfiguration config = new RealmConfiguration.Builder(/*getApplicationContext()*/).deleteRealmIfMigrationNeeded().build();
+    Realm.setDefaultConfiguration(config);
   }
 
   // Metodo para definir IDs
