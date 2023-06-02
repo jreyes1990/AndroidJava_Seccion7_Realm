@@ -10,10 +10,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.seccion7_realm.Models.Board;
 import com.example.seccion7_realm.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import io.realm.Realm;
+
 public class BoardActivity extends AppCompatActivity {
+  private Realm realm;
   private FloatingActionButton fab;
 
   @Override
@@ -21,11 +25,41 @@ public class BoardActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_board);
 
+    // DB Realm
+    realm = Realm.getDefaultInstance();
+
     fab = (FloatingActionButton) findViewById(R.id.fabAddBoard);
 
-    showAlertForCreatingBoard("title", "message");
+    fab.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View v) {
+        showAlertForCreatingBoard("Add New Board", "Type a name for yout new board");
+      }
+    });
   }
 
+  //** CRUD Actions **//
+
+
+  private void createNewBoard(String boardName) {
+    realm.beginTransaction();
+    Board board = new Board(boardName);
+    realm.copyToRealm(board);
+    realm.commitTransaction();
+
+    // Otra opcion del uso del begin y commit
+    /*
+    realm.executeTransaction(new Realm.Transaction() {
+      @Override
+      public void execute(final Realm realm) {
+        Board board = new Board(boardName);
+        realm.copyToRealm(board);
+      }
+    });
+     */
+  }
+
+  //** Dialogs **//
   private void showAlertForCreatingBoard(String title, String message){
     AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
@@ -52,8 +86,5 @@ public class BoardActivity extends AppCompatActivity {
 
     AlertDialog dialog = builder.create();
     dialog.show();
-  }
-
-  private void createNewBoard(String boardName) {
   }
 }

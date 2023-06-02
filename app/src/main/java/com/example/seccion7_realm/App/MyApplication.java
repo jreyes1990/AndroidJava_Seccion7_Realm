@@ -30,6 +30,7 @@ public class MyApplication extends Application {
 
   // Configuracion de base de datos en Realm
   private void setUpRealmConfig(){
+    Realm.init(getApplicationContext());
     RealmConfiguration config = new RealmConfiguration.Builder(/*getApplicationContext()*/).deleteRealmIfMigrationNeeded().build();
     Realm.setDefaultConfiguration(config);
   }
