@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.example.seccion7_realm.Models.Board;
 import com.example.seccion7_realm.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class BoardAdapter extends BaseAdapter {
@@ -61,9 +63,11 @@ public class BoardAdapter extends BaseAdapter {
     String textForNotes = (numberOfNotes ==1) ? numberOfNotes+" Note" : numberOfNotes+" Notes";
     vh.notes.setText(textForNotes);
 
-    vh.createdAt.setText(board.getCreatedAt().toString());
+    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+    String createdAt = dateFormat.format(board.getCreatedAt());
+    vh.createdAt.setText(createdAt);
 
-    return null;
+    return convertView;
   }
 
   public class ViewHolder{
