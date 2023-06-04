@@ -93,7 +93,7 @@ public class BoardActivity extends AppCompatActivity implements RealmChangeListe
         if (boardName.length() > 0){
           createNewBoard(boardName);
         }else{
-          Toast.makeText(getApplicationContext(), "The name is required to create a new board", Toast.LENGTH_SHORT).show();
+          Toast.makeText(getApplicationContext(), "The name is required to create a new board", Toast.LENGTH_LONG).show();
         }
       }
     });
