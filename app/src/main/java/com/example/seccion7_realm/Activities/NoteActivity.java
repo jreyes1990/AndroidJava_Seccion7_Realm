@@ -18,9 +18,10 @@ import com.example.seccion7_realm.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 
-public class NoteActivity extends AppCompatActivity {
+public class NoteActivity extends AppCompatActivity implements RealmChangeListener<Board> {
   private ListView listView;
   private FloatingActionButton fab;
 
@@ -44,6 +45,7 @@ public class NoteActivity extends AppCompatActivity {
     }
 
     board = realm.where(Board.class).equalTo("id", boardId).findFirst();
+    board.addChangeListener(this);
     notes = board.getNotes();
     this.setTitle(board.getTitle());
 
@@ -62,15 +64,19 @@ public class NoteActivity extends AppCompatActivity {
 
   //** CRUD Actions **//
   private void createNewNote(String note) {
-
+    realm.beginTransaction();
+    Note _note = new Note(note);
+    realm.copyToRealm(_note);
+    board.getNotes().add(_note);
+    realm.commitTransaction();
 
     // Otra opcion del uso del begin y commit
     /*
     realm.executeTransaction(new Realm.Transaction() {
       @Override
       public void execute(final Realm realm) {
-        Board board = new Board(boardName);
-        realm.copyToRealm(board);
+        Note _note = new Note(note);
+        realm.copyToRealm(_note);
       }
     });
      */
@@ -103,5 +109,10 @@ public class NoteActivity extends AppCompatActivity {
 
     AlertDialog dialog = builder.create();
     dialog.show();
+  }
+
+  @Override
+  public void onChange(Board board) {
+    adapter.notifyDataSetChanged();
   }
 }
