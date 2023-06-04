@@ -4,9 +4,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -17,9 +19,10 @@ import com.example.seccion7_realm.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
-public class BoardActivity extends AppCompatActivity {
+public class BoardActivity extends AppCompatActivity implements RealmChangeListener<RealmResults<Board>>, AdapterView.OnItemClickListener {
   private Realm realm;
   private FloatingActionButton fab;
   private ListView listView;
@@ -34,6 +37,7 @@ public class BoardActivity extends AppCompatActivity {
     // DB Realm
     realm = Realm.getDefaultInstance();
     boards = realm.where(Board.class).findAll();
+    boards.addChangeListener(this);
 
     adapter = new BoardAdapter(this, boards, R.layout.list_view_board_item);
     listView = (ListView) findViewById(R.id.listViewBoard);
@@ -96,5 +100,17 @@ public class BoardActivity extends AppCompatActivity {
 
     AlertDialog dialog = builder.create();
     dialog.show();
+  }
+
+  @Override
+  public void onChange(RealmResults<Board> boards) {
+    adapter.notifyDataSetChanged();
+  }
+
+  @Override
+  public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+    Intent intent = new Intent(BoardActivity.this, NoteActivity.class);
+    intent.putExtra("id", boards.get(position).getId());
+    startActivity(intent);
   }
 }
